@@ -1,5 +1,4 @@
 var five = require("johnny-five");
-var pixel = require("node-pixel");
 var temporal = require("temporal");
 
 var max_speed_l = 255;
@@ -18,35 +17,6 @@ board.on("ready", function (err) {
 
     l_motor = new five.Motor({pins: {pwm: 6, dir: 7}});
     r_motor = new five.Motor({pins: {pwm: 5, dir: 4}});
-
-    strip = new pixel.Strip({
-        data: 13,
-        length: 2,
-        board: this,
-        controller: "FIRMATA"
-    });
-
-    strip.on("ready", function () {
-
-
-        var colors = ["#440000", "#000044"];
-        var current_colors = [0, 1];
-        var current_pos = [0, 1];
-        var blinker = setInterval(function () {
-
-            strip.color("#000"); // blanks it out
-            for (var i = 0; i < current_pos.length; i++) {
-                if (++current_pos[i] >= strip.stripLength()) {
-                    current_pos[i] = 0;
-                    if (++current_colors[i] >= colors.length) current_colors[i] = 0;
-                }
-                strip.pixel(current_pos[i]).color(colors[current_colors[i]]);
-            }
-            strip.show();
-        }, 1000 / fps);
-
-    });
-
 
     l_motor.reverse(max_speed_l);
     r_motor.forward(max_speed_r);
